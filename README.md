@@ -1,7 +1,7 @@
 # Shrine::Storage::Url
 
-Provides a fake storage which allows you to create a Shrine attachment defined
-only by a custom URL.
+Provides a "storage" which allows you to save uploaded files defined by a
+custom URL.
 
 ## Installation
 
@@ -11,20 +11,38 @@ gem "shrine-url"
 
 ## Usage
 
-The representation of the uploaded file assumes that the ID will be a custom
-URL:
-
 ```rb
-{
-  id: "http://example.com/image.jpg",
-  storage: "url",
-  metadata: {}
-}
+require "shrine/storage/url"
+
+Shrine.storages[:cache] = Shrine::Storage::Url.new
 ```
 
-This is used in [shrine-transloadit] for direct uploads, where a temporary URL
-of the uploaded file is returned, and we want to use that URL for further
-processing, eventually replacing the attachment with permanent files.
+```rb
+photo = Photo.new
+
+attachment_data = {
+  id: "http://example.com/image.jpg",
+  storage: "cache",
+  metadata: {...}
+}
+
+photo.image = attachment_data.to_json
+
+photo.image.url      #=> "http://example.com/image.jpg"
+photo.image.download # Downloads from this URL
+photo.image.exists?  # Checks whether a request to this URL returns 200
+photo.image.delete   # No-op
+```
+
+This cached file will be promoted to permanent storage like any other cached
+file.
+
+## Use cases
+
+This storage can be used with [shrine-transloadit] for direct uploads, where a
+temporary URL of the uploaded file is returned, and we want to use that URL for
+further background processing, eventually replacing the attachment with
+processed files.
 
 ## Contributing
 
