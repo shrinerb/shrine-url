@@ -34,8 +34,8 @@ photo.image.exists?  # Checks whether a request to this URL returns 200
 photo.image.delete   # No-op
 ```
 
-This cached file will be promoted to permanent storage like any other cached
-file.
+Uploading this cached file to permanent storage will download the file from the
+URL.
 
 ## Use cases
 
