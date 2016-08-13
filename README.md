@@ -27,6 +27,7 @@ attachment_data = {
 }
 
 photo.image = attachment_data.to_json
+photo.image #=> #<Shrine::UploadedFile>
 
 photo.image.url      #=> "http://example.com/image.jpg"
 photo.image.download # Downloads from this URL
@@ -34,8 +35,10 @@ photo.image.exists?  # Checks whether a request to this URL returns 200
 photo.image.delete   # No-op
 ```
 
-Uploading this cached file to permanent storage will download the file from the
-URL.
+The custom URL can be saved to `id`, and `#url` will simply read that field.
+When this `Shrine::UploadedFile` is uploaded to another storage (e.g. permanent
+storage), if the storage doesn't support upload from URL the file will simply
+be downloaded from the custom URL, just like for any other storage.
 
 ## Use cases
 
