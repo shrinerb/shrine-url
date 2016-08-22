@@ -47,6 +47,10 @@ temporary URL of the uploaded file is returned, and we want to use that URL for
 further background processing, eventually replacing the attachment with
 processed files.
 
+It is also used in [shrine-tus-demo], where the files are uploaded to a
+separate endpoint, and then its file URL is attached to a database record and
+promoted to permanent storage.
+
 ## Contributing
 
 ```sh
@@ -58,3 +62,4 @@ $ rake test
 [MIT](/LICENSE.txt)
 
 [shrine-transloadit]: https://github.com/janko-m/shrine-transloadit
+[shrine-tus-demo]: https://github.com/janko-m/shrine-tus-demo
