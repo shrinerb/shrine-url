@@ -20,7 +20,9 @@ class Shrine
       def exists?(id)
         response = nil
         uri = URI(id)
-        Net::HTTP.start(uri.host, uri.port) { |http| response = http.head(id) }
+        Net::HTTP.start(uri.host, uri.port) do |http|
+          response = http.head(uri.request_uri)
+        end
         response.code.to_i == 200
       end
 
