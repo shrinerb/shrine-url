@@ -19,7 +19,7 @@ class Shrine
 
       def exists?(id)
         response = request(:head, id)
-        response.code.to_i == 200
+        (200..299).cover?(response.code.to_i)
       end
 
       def url(id, **options)

@@ -38,6 +38,9 @@ describe Shrine::Storage::Url do
       stub_request(:head, "http://example.com").to_return(status: 200)
       assert_equal true, @storage.exists?("http://example.com")
 
+      stub_request(:head, "http://example.com").to_return(status: 204)
+      assert_equal true, @storage.exists?("http://example.com")
+
       stub_request(:head, "http://example.com").to_return(status: 404)
       assert_equal false, @storage.exists?("http://example.com")
     end
