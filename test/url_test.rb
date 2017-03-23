@@ -59,10 +59,4 @@ describe Shrine::Storage::Url do
       assert_requested(:delete, "http://example.com")
     end
   end
-
-  describe "#clear!" do
-    it "is a noop" do
-      @storage.clear!
-    end
-  end
 end

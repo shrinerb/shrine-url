@@ -30,10 +30,6 @@ class Shrine
         request(:delete, id)
       end
 
-      def clear!
-        # noop
-      end
-
       private
 
       def request(method, url)
