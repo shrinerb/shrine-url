@@ -18,11 +18,7 @@ class Shrine
       end
 
       def exists?(id)
-        response = nil
-        uri = URI(id)
-        Net::HTTP.start(uri.host, uri.port) do |http|
-          response = http.head(uri.request_uri)
-        end
+        response = request(:head, id)
         response.code.to_i == 200
       end
 
@@ -31,11 +27,22 @@ class Shrine
       end
 
       def delete(id)
-        # noop
+        request(:delete, id)
       end
 
       def clear!
         # noop
+      end
+
+      private
+
+      def request(method, url)
+        response = nil
+        uri = URI(url)
+        Net::HTTP.start(uri.host, uri.port) do |http|
+          response = http.send(method, uri.request_uri)
+        end
+        response
       end
     end
   end
