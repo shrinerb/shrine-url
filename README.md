@@ -29,10 +29,11 @@ attachment_data = {
 photo.image = attachment_data.to_json
 photo.image #=> #<Shrine::UploadedFile>
 
-photo.image.url      #=> "http://example.com/image.jpg"
-photo.image.download # Downloads from this URL
-photo.image.exists?  # Checks whether a request to this URL returns 200
-photo.image.delete   # No-op
+photo.image.url           #=> "http://example.com/image.jpg"
+photo.image.download      # Sends a GET request and streams body to Tempfile
+photo.image.open { |io| } # Sends a GET request and yields `Down::ChunkedIO` ready for reading
+photo.image.exists?       # Sends a HEAD request and returns true if it's 2xx
+photo.image.delete        # Sends a DELETE request
 ```
 
 The custom URL can be saved to `id`, and `#url` will simply read that field.
