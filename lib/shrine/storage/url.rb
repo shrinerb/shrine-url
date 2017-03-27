@@ -35,9 +35,13 @@ class Shrine
       def request(method, url)
         response = nil
         uri = URI(url)
+
         Net::HTTP.start(uri.host, uri.port) do |http|
-          response = http.send(method, uri.request_uri)
+          request = Net::HTTP.const_get(method.to_s.capitalize).new(uri.request_uri)
+          yield request if block_given?
+          response = http.request(request)
         end
+
         response
       end
     end
