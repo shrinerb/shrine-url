@@ -17,8 +17,8 @@ describe Shrine::Storage::Url do
 
   describe "#download" do
     it "downloads the remote file into a Tempfile" do
-      stub_request(:get, "http://example.com").to_return(body: "file")
-      tempfile = @storage.download("http://example.com")
+      stub_request(:get, "http://example.com?foo=bar").to_return(body: "file")
+      tempfile = @storage.download("http://example.com?foo=bar")
       assert_instance_of Tempfile, tempfile
       assert_equal "file", tempfile.read
     end
@@ -26,8 +26,8 @@ describe Shrine::Storage::Url do
 
   describe "#open" do
     it "opens the remote file" do
-      stub_request(:get, "http://example.com").to_return(body: "file")
-      io = @storage.open("http://example.com")
+      stub_request(:get, "http://example.com?foo=bar").to_return(body: "file")
+      io = @storage.open("http://example.com?foo=bar")
       assert_instance_of Down::ChunkedIO, io
       assert_equal "file", io.read
     end
@@ -35,14 +35,14 @@ describe Shrine::Storage::Url do
 
   describe "#exists?" do
     it "checks whether the remote file exists" do
-      stub_request(:head, "http://example.com").to_return(status: 200)
-      assert_equal true, @storage.exists?("http://example.com")
+      stub_request(:head, "http://example.com?foo=bar").to_return(status: 200)
+      assert_equal true, @storage.exists?("http://example.com?foo=bar")
 
-      stub_request(:head, "http://example.com").to_return(status: 204)
-      assert_equal true, @storage.exists?("http://example.com")
+      stub_request(:head, "http://example.com?foo=bar").to_return(status: 204)
+      assert_equal true, @storage.exists?("http://example.com?foo=bar")
 
-      stub_request(:head, "http://example.com").to_return(status: 404)
-      assert_equal false, @storage.exists?("http://example.com")
+      stub_request(:head, "http://example.com?foo=bar").to_return(status: 404)
+      assert_equal false, @storage.exists?("http://example.com?foo=bar")
     end
   end
 
@@ -54,9 +54,9 @@ describe Shrine::Storage::Url do
 
   describe "#delete" do
     it "issues a delete request" do
-      stub_request(:delete, "http://example.com")
-      @storage.delete("http://example.com")
-      assert_requested(:delete, "http://example.com")
+      stub_request(:delete, "http://example.com?foo=bar")
+      @storage.delete("http://example.com?foo=bar")
+      assert_requested(:delete, "http://example.com?foo=bar")
     end
   end
 end
