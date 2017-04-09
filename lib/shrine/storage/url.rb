@@ -83,14 +83,20 @@ class Shrine
 
           tempfile = Tempfile.new("shrine-url", binmode: true)
           cmd = %W[wget --no-verbose #{url} -O #{tempfile.path}]
-          stdout, stderr, status = Open3.capture3(*cmd)
 
-          if !status.success?
-            tempfile.close!
-            raise "downloading from #{url} failed: #{stderr}"
+          begin
+            stdout, stderr, status = Open3.capture3(*cmd)
+
+            if !status.success?
+              tempfile.close!
+              raise Error, "downloading from #{url} failed: #{stderr}"
+            end
+          rescue Errno::ENOENT
+            raise Error, "wget is not installed"
           end
 
-          tempfile.tap(&:open)
+          tempfile.open # refresh file descriptor
+          tempfile
         end
 
         def open_with_wget(url)
