@@ -1,6 +1,6 @@
 # Shrine::Storage::Url
 
-Provides a "storage" which allows you to attach uploaded files defined by a
+Provides a "storage" for [Shrine] for attaching uploaded files defined by a
 custom URL.
 
 ## Installation
@@ -91,6 +91,7 @@ $ rake test
 
 [MIT](/LICENSE.txt)
 
+[Shrine]: https://github.com/janko-m/shrine
 [shrine-transloadit]: https://github.com/janko-m/shrine-transloadit
 [shrine-tus-demo]: https://github.com/janko-m/shrine-tus-demo
 [shrine-cloudinary]: https://github.com/janko-m/shrine-cloudinary
