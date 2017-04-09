@@ -29,6 +29,11 @@ describe Shrine::Storage::Url do
       assert_instance_of Tempfile, tempfile
       assert_equal 0, tempfile.pos
     end
+
+    it "raises an error when wget download failed" do
+      @storage = Shrine::Storage::Url.new(downloader: :wget)
+      assert_raises(Shrine::Error) { @storage.download("http://example.com/foobar") }
+    end
   end
 
   describe "#open" do
