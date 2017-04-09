@@ -22,6 +22,13 @@ describe Shrine::Storage::Url do
       assert_instance_of Tempfile, tempfile
       assert_equal "file", tempfile.read
     end
+
+    it "works with wget" do
+      @storage = Shrine::Storage::Url.new(downloader: :wget)
+      tempfile = @storage.download("http://example.com?foo=bar")
+      assert_instance_of Tempfile, tempfile
+      assert_equal 0, tempfile.pos
+    end
   end
 
   describe "#open" do
@@ -30,6 +37,17 @@ describe Shrine::Storage::Url do
       io = @storage.open("http://example.com?foo=bar")
       assert_instance_of Down::ChunkedIO, io
       assert_equal "file", io.read
+    end
+
+    it "works with wget" do
+      @storage = Shrine::Storage::Url.new(downloader: :wget)
+      tempfile = @storage.open("http://example.com?foo=bar")
+      assert_instance_of Tempfile, tempfile
+      assert_equal 0, tempfile.pos
+
+      path = tempfile.path
+      tempfile.close
+      refute File.exist?(path)
     end
   end
 
