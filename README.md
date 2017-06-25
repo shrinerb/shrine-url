@@ -43,27 +43,25 @@ photo.image.exists?       # Sends a HEAD request and returns true if it's 2xx
 photo.image.delete        # Sends a DELETE request
 ```
 
-No HTTP requests are made at this point. When the cached file is uploaded to
-permanent storage, `shrine-url` will by default use [Down] to download the file
-from the given URL, before uploading it to permanent storage.
-
-Note that Down doesn't yet support resuming the download in case of network
-failures, so if you're expecting large files to be attached, you might want to
-tell `Shrine::Storage::Url` to use `wget` instead of Down.
+No HTTP requests are made at this point. When this "cached file" is about to be
+uploaded to a permanent storage, `shrine-url` will download the file from the
+given URL using [Down]. By default the `Down::NetHttp` backend will be used for
+downloading, but you can tell `shrine-url` to use another Down backend:
 
 ```rb
 Shrine::Storage::Url.new(downloader: :wget)
+# or
+require "down/http"
+Shrine::Storage::Url.new(downloader: Down::Http)
+# or
+require "down/net_http"
+Shrine::Storage::Url.new(downloader: Down::NetHttp.new("User-Agent" => "MyApp/1.0.0"))
 ```
 
-Just note that using `wget` won't work well with the `restore_cached_data`
-Shrine plugin from the performance standpoint, because `wget` doesn't support
-partial downloads, so the file would first be fully downloaded before
-extracting metadata.
-
-If you're using permanent storage that supports uploading from remote URL (like
-[shrine-cloudinary] or [shrine-uploadcare]), downloading will be completely
-skipped and the permanent storage will use only the custom URL for uploading
-the file.
+Note that if you're using permanent storage that supports uploading from a
+remote URL (like [shrine-cloudinary] or [shrine-uploadcare]), downloading will
+be completely skipped as the permanent storage will use only the URL for
+uploading the file.
 
 ## Advantages and Use Cases
 
@@ -86,6 +84,9 @@ promoted to permanent storage.
 ```sh
 $ rake test
 ```
+
+The test suite pulls and runs [kennethreitz/httpbin] as a Docker container, so
+you'll need to have Docker installed and running.
 
 ## License
 

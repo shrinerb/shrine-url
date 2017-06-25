@@ -1,10 +1,30 @@
 require "test_helper"
 require "ostruct"
-require "webmock/minitest"
 
 describe Shrine::Storage::Url do
   before do
-    @storage = Shrine::Storage::Url.new
+    @storage = url
+  end
+
+  def url(**options)
+    Shrine::Storage::Url.new(**options)
+  end
+
+  describe "#initialize" do
+    it "uses :net_http downloader by default" do
+      assert_equal Down::NetHttp, url.downloader
+    end
+
+    it "accepts any down backend" do
+      storage = url(downloader: :net_http)
+      assert_equal Down::NetHttp, storage.downloader
+
+      storage = url(downloader: :http)
+      assert_equal Down::Http, storage.downloader
+
+      storage = url(downloader: :wget)
+      assert_equal Down::Wget, storage.downloader
+    end
   end
 
   describe "#upload" do
@@ -17,55 +37,25 @@ describe Shrine::Storage::Url do
 
   describe "#download" do
     it "downloads the remote file into a Tempfile" do
-      stub_request(:get, "http://example.com?foo=bar").to_return(body: "file")
-      tempfile = @storage.download("http://example.com?foo=bar")
+      tempfile = @storage.download("#{$httpbin}/bytes/100")
       assert_instance_of Tempfile, tempfile
-      assert_equal "file", tempfile.read
-    end
-
-    it "works with wget" do
-      @storage = Shrine::Storage::Url.new(downloader: :wget)
-      tempfile = @storage.download("http://example.com?foo=bar")
-      assert_instance_of Tempfile, tempfile
-      assert_equal 0, tempfile.pos
-    end
-
-    it "raises an error when wget download failed" do
-      @storage = Shrine::Storage::Url.new(downloader: :wget)
-      assert_raises(Shrine::Error) { @storage.download("http://example.com/foobar") }
+      assert_equal 100, tempfile.size
     end
   end
 
   describe "#open" do
     it "opens the remote file" do
-      stub_request(:get, "http://example.com?foo=bar").to_return(body: "file")
-      io = @storage.open("http://example.com?foo=bar")
+      io = @storage.open("#{$httpbin}/bytes/100")
       assert_instance_of Down::ChunkedIO, io
-      assert_equal "file", io.read
-    end
-
-    it "works with wget" do
-      @storage = Shrine::Storage::Url.new(downloader: :wget)
-      tempfile = @storage.open("http://example.com?foo=bar")
-      assert_instance_of Tempfile, tempfile
-      assert_equal 0, tempfile.pos
-
-      path = tempfile.path
-      tempfile.close
-      refute File.exist?(path)
+      assert_equal 100, io.size
     end
   end
 
   describe "#exists?" do
     it "checks whether the remote file exists" do
-      stub_request(:head, "http://example.com?foo=bar").to_return(status: 200)
-      assert_equal true, @storage.exists?("http://example.com?foo=bar")
-
-      stub_request(:head, "http://example.com?foo=bar").to_return(status: 204)
-      assert_equal true, @storage.exists?("http://example.com?foo=bar")
-
-      stub_request(:head, "http://example.com?foo=bar").to_return(status: 404)
-      assert_equal false, @storage.exists?("http://example.com?foo=bar")
+      assert_equal true,  @storage.exists?("#{$httpbin}/status/200")
+      assert_equal true,  @storage.exists?("#{$httpbin}/status/204")
+      assert_equal false, @storage.exists?("#{$httpbin}/status/404")
     end
   end
 
@@ -77,9 +67,11 @@ describe Shrine::Storage::Url do
 
   describe "#delete" do
     it "issues a delete request" do
-      stub_request(:delete, "http://example.com?foo=bar")
-      @storage.delete("http://example.com?foo=bar")
-      assert_requested(:delete, "http://example.com?foo=bar")
+      @storage.delete("#{$httpbin}/delete")
+    end
+
+    it "doesn't care what status is returned" do
+      @storage.delete("#{$httpbin}/status/404")
     end
   end
 end
