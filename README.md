@@ -98,3 +98,4 @@ you'll need to have Docker installed and running.
 [shrine-cloudinary]: https://github.com/janko-m/shrine-cloudinary
 [shrine-uploadcare]: https://github.com/janko-m/shrine-uploadcare
 [Down]: https://github.com/janko-m/down
+[kennethreitz/httpbin]: https://github.com/kennethreitz/httpbin
