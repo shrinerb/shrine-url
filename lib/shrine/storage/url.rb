@@ -1,5 +1,5 @@
 require "shrine"
-require "net/http"
+require "net/https"
 
 class Shrine
   module Storage
@@ -44,16 +44,14 @@ class Shrine
       private
 
       def request(method, url)
-        response = nil
-        uri = URI(url)
+        uri     = URI.parse(url)
+        use_ssl = uri.is_a?(URI::HTTPS)
 
-        Net::HTTP.start(uri.host, uri.port) do |http|
+        Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
           request = Net::HTTP.const_get(method.to_s.capitalize).new(uri.request_uri)
           yield request if block_given?
-          response = http.request(request)
+          http.request(request)
         end
-
-        response
       end
     end
   end
