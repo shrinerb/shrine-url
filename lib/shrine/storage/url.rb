@@ -43,12 +43,12 @@ class Shrine
 
       private
 
-      def request(method, url)
+      def request(verb, url)
         uri     = URI.parse(url)
         use_ssl = uri.is_a?(URI::HTTPS)
 
         Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
-          request = Net::HTTP.const_get(method.to_s.capitalize).new(uri.request_uri)
+          request = Net::HTTP.const_get(verb.capitalize).new(uri.request_uri)
           yield request if block_given?
           http.request(request)
         end
