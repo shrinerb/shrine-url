@@ -1,5 +1,6 @@
 require "test_helper"
 require "ostruct"
+require "cgi"
 
 describe Shrine::Storage::Url do
   before do
@@ -56,6 +57,18 @@ describe Shrine::Storage::Url do
       assert_equal true,  @storage.exists?("#{$httpbin}/status/200")
       assert_equal true,  @storage.exists?("#{$httpbin}/status/204")
       assert_equal false, @storage.exists?("#{$httpbin}/status/404")
+    end
+
+    it "follows redirects" do
+      assert_equal true,  @storage.exists?("#{$httpbin}/redirect/1")
+      assert_equal true,  @storage.exists?("#{$httpbin}/redirect/2")
+      assert_equal true,  @storage.exists?("#{$httpbin}/redirect/3")
+
+      assert_equal true,  @storage.exists?("#{$httpbin}/relative-redirect/1")
+      assert_equal true,  @storage.exists?("#{$httpbin}/absolute-redirect/1")
+
+      assert_equal true,  @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/200")}")
+      assert_equal false, @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/404")}")
     end
   end
 

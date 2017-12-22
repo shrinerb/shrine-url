@@ -1,5 +1,6 @@
 require "shrine"
 require "net/https"
+require "uri"
 
 class Shrine
   module Storage
@@ -30,7 +31,7 @@ class Shrine
 
       def exists?(id)
         response = request(:head, id)
-        (200..299).cover?(response.code.to_i)
+        (200..399).cover?(response.code.to_i)
       end
 
       def url(id, **options)
@@ -43,15 +44,24 @@ class Shrine
 
       private
 
-      def request(verb, url)
+      def request(verb, url, follows_remaining: 2)
         uri     = URI.parse(url)
         use_ssl = uri.is_a?(URI::HTTPS)
 
-        Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
+        response = Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
           request = Net::HTTP.const_get(verb.capitalize).new(uri.request_uri)
           yield request if block_given?
           http.request(request)
         end
+
+        if response.is_a?(Net::HTTPRedirection) && follows_remaining > 0
+          location = URI.parse(response["Location"])
+          location = uri + location if location.relative?
+
+          response = request(verb, location.to_s, follows_remaining: follows_remaining - 1)
+        end
+
+        response
       end
     end
   end
