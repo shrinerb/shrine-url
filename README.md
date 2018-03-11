@@ -92,10 +92,10 @@ you'll need to have Docker installed and running.
 
 [MIT](/LICENSE.txt)
 
-[Shrine]: https://github.com/janko-m/shrine
-[shrine-transloadit]: https://github.com/janko-m/shrine-transloadit
-[shrine-tus-demo]: https://github.com/janko-m/shrine-tus-demo
-[shrine-cloudinary]: https://github.com/janko-m/shrine-cloudinary
-[shrine-uploadcare]: https://github.com/janko-m/shrine-uploadcare
+[Shrine]: https://github.com/shrinerb/shrine
+[shrine-transloadit]: https://github.com/shrinerb/shrine-transloadit
+[shrine-tus-demo]: https://github.com/shrinerb/shrine-tus-demo
+[shrine-cloudinary]: https://github.com/shrinerb/shrine-cloudinary
+[shrine-uploadcare]: https://github.com/shrinerb/shrine-uploadcare
 [Down]: https://github.com/janko-m/down
 [kennethreitz/httpbin]: https://github.com/kennethreitz/httpbin
