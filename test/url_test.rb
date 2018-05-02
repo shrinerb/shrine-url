@@ -12,8 +12,8 @@ describe Shrine::Storage::Url do
   end
 
   describe "#initialize" do
-    it "uses :net_http downloader by default" do
-      assert_equal Down::NetHttp, url.downloader
+    it "uses :http downloader by default" do
+      assert_equal Down::Http, url.downloader
     end
 
     it "accepts any down backend" do
@@ -62,10 +62,13 @@ describe Shrine::Storage::Url do
     it "follows redirects" do
       assert_equal true,  @storage.exists?("#{$httpbin}/redirect/1")
       assert_equal true,  @storage.exists?("#{$httpbin}/redirect/2")
-      assert_equal true,  @storage.exists?("#{$httpbin}/redirect/3")
 
       assert_equal true,  @storage.exists?("#{$httpbin}/relative-redirect/1")
       assert_equal true,  @storage.exists?("#{$httpbin}/absolute-redirect/1")
+
+      assert_raises(HTTP::Redirector::TooManyRedirectsError) do
+        @storage.exists?("#{$httpbin}/redirect/3")
+      end
 
       assert_equal true,  @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/200")}")
       assert_equal false, @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/404")}")

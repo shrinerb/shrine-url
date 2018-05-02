@@ -15,11 +15,10 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "shrine", ">= 2.0"
   gem.add_dependency "down", "~> 4.4"
+  gem.add_dependency "http", "~> 3.2"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "minitest"
   gem.add_development_dependency "docker-api"
-  gem.add_development_dependency "http", "~> 3.0"
   gem.add_development_dependency "posix-spawn" unless RUBY_ENGINE == "jruby"
-  gem.add_development_dependency "http_parser.rb"
 end
