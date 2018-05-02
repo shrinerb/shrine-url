@@ -5,8 +5,8 @@ custom URL.
 
 ## Installation
 
-```ruby
-gem "shrine-url"
+```rb
+gem "shrine-url", "~> 2.0"
 ```
 
 ## Usage
@@ -35,18 +35,24 @@ Now you can assign this data as the cached attachment:
 ```rb
 photo = Photo.new(image: data)
 photo.image #=> #<Shrine::UploadedFile>
-
 photo.image.url           #=> "http://example.com/image.jpg"
-photo.image.download      # Sends a GET request and streams body to Tempfile
-photo.image.open { |io| } # Sends a GET request and yields `Down::ChunkedIO` ready for reading
-photo.image.exists?       # Sends a HEAD request and returns true if it's 2xx
-photo.image.delete        # Sends a DELETE request
 ```
 
-No HTTP requests are made at this point. When this "cached file" is about to be
-uploaded to a permanent storage, `shrine-url` will download the file from the
-given URL using [Down]. By default the `Down::NetHttp` backend will be used for
-downloading, but you can tell `shrine-url` to use another Down backend:
+No HTTP requests are made when file is assigned (but you can load the
+`restore_cached_data` Shrine plugin if you want metadata to be extracted on
+assignment). When this "cached file" is about to be uploaded to a permanent
+storage, `shrine-url` will download the file from the given URL using [Down].
+
+```rb
+uploaded_file.download      # Sends a GET request and streams body to Tempfile
+uploaded_file.open { |io| } # Sends a GET request and yields `Down::ChunkedIO` ready for reading
+uploaded_file.exists?       # Sends a HEAD request and returns true if response status is 2xx
+uploaded_file.delete        # Sends a DELETE request
+```
+
+By default the `Down::Http` backend will be used for downloading, which is
+implemented using [HTTP.rb]. You can change the Down backend via the
+`:downloader` option:
 
 ```rb
 Shrine::Storage::Url.new(downloader: :wget)
@@ -98,4 +104,5 @@ you'll need to have Docker installed and running.
 [shrine-cloudinary]: https://github.com/shrinerb/shrine-cloudinary
 [shrine-uploadcare]: https://github.com/shrinerb/shrine-uploadcare
 [Down]: https://github.com/janko-m/down
+[HTTP.rb]: https://github.com/httprb/http
 [kennethreitz/httpbin]: https://github.com/kennethreitz/httpbin
