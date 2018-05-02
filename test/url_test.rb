@@ -42,6 +42,10 @@ describe Shrine::Storage::Url do
       assert_instance_of Tempfile, tempfile
       assert_equal 100, tempfile.size
     end
+
+    it "accepts additional down options" do
+      @storage.download("#{$httpbin}/post", method: :post)
+    end
   end
 
   describe "#open" do
@@ -49,6 +53,10 @@ describe Shrine::Storage::Url do
       io = @storage.open("#{$httpbin}/bytes/100")
       assert_instance_of Down::ChunkedIO, io
       assert_equal 100, io.size
+    end
+
+    it "accepts additional down options" do
+      @storage.open("#{$httpbin}/post", method: :post)
     end
   end
 
