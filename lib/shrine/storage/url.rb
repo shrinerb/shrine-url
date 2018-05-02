@@ -43,8 +43,9 @@ class Shrine
 
       private
 
-      def request(verb, url, follow: {}, **options)
-        options[:follow] = { max_hops: 2 }.merge(follow)
+      def request(verb, url, follow: {}, headers: {}, **options)
+        options[:follow]  = { max_hops: 2 }.merge(follow)
+        options[:headers] = { user_agent: "shrine-url/1.0.2" }.merge(headers)
 
         HTTP.request(verb, url, options)
       end

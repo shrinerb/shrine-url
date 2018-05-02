@@ -52,6 +52,12 @@ describe Shrine::Storage::Url do
     end
   end
 
+  describe "#url" do
+    it "returns the given URL" do
+      assert_equal "http://example.com", @storage.url("http://example.com")
+    end
+  end
+
   describe "#exists?" do
     it "checks whether the remote file exists" do
       assert_equal true,  @storage.exists?("#{$httpbin}/status/200")
@@ -72,12 +78,6 @@ describe Shrine::Storage::Url do
 
       assert_equal true,  @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/200")}")
       assert_equal false, @storage.exists?("#{$httpbin}/redirect-to?url=#{CGI.escape("#{$httpbin}/status/404")}")
-    end
-  end
-
-  describe "#url" do
-    it "returns the given URL" do
-      assert_equal "http://example.com", @storage.url("http://example.com")
     end
   end
 
