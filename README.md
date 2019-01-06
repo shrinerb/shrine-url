@@ -47,7 +47,7 @@ storage, `shrine-url` will download the file from the given URL using [Down].
 uploaded_file.download      # Sends a GET request and streams body to Tempfile
 uploaded_file.open { |io| } # Sends a GET request and yields `Down::ChunkedIO` ready for reading
 uploaded_file.exists?       # Sends a HEAD request and returns true if response status is 2xx
-uploaded_file.delete        # Sends a DELETE request
+uploaded_file.delete        # Sends a DELETE request if :delete is set to true
 ```
 
 By default the `Down::Http` backend will be used for downloading, which is
@@ -68,6 +68,16 @@ Note that if you're using permanent storage that supports uploading from a
 remote URL (like [shrine-cloudinary] or [shrine-uploadcare]), downloading will
 be completely skipped as the permanent storage will use only the URL for
 uploading the file.
+
+## Deleting
+
+Calling `Shrine::UploadedFile#delete` will call `Shrine::Storage::Url#delete`,
+which for safety doesn't do anything by default. If you want it to make a
+`DELETE` request to the URL, you can set `:delete` to `true` on initialization:
+
+```rb
+Shrine::Storage::Url.new(delete: true)
+```
 
 ## Advantages and Use Cases
 

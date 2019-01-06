@@ -90,12 +90,24 @@ describe Shrine::Storage::Url do
   end
 
   describe "#delete" do
-    it "issues a delete request" do
-      @storage.delete("#{$httpbin}/delete")
+    describe "by default" do
+      it "is a no-op" do
+        assert_nil @storage.delete("#{$httpbin}/delete")
+      end
     end
 
-    it "doesn't care what status is returned" do
-      @storage.delete("#{$httpbin}/status/404")
+    describe "with delete: true" do
+      before do
+        @storage = url(delete: true)
+      end
+
+      it "issues a delete request" do
+        @storage.delete("#{$httpbin}/delete")
+      end
+
+      it "doesn't care what status is returned" do
+        @storage.delete("#{$httpbin}/status/404")
+      end
     end
   end
 end

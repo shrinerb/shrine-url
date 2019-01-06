@@ -6,14 +6,9 @@ class Shrine
     class Url
       attr_reader :downloader
 
-      def initialize(downloader: :http)
-        if downloader.is_a?(Symbol)
-          require "down/#{downloader}"
-          const_name = downloader.to_s.split("_").map(&:capitalize).join
-          @downloader = Down.const_get(const_name)
-        else
-          @downloader = downloader
-        end
+      def initialize(downloader: :http, delete: false)
+        @downloader = resolve_downloader(downloader)
+        @delete     = false
       end
 
       def upload(io, id, **)
@@ -38,7 +33,7 @@ class Shrine
       end
 
       def delete(id)
-        request(:delete, id)
+        request(:delete, id) if @delete
       end
 
       private
@@ -47,6 +42,16 @@ class Shrine
         options[:follow] = { max_hops: 2 }.merge(follow)
 
         HTTP.request(verb, url, options)
+      end
+
+      def resolve_downloader(downloader)
+        if downloader.is_a?(Symbol)
+          require "down/#{downloader}"
+          const_name = downloader.to_s.split("_").map(&:capitalize).join
+          Down.const_get(const_name)
+        else
+          downloader
+        end
       end
     end
   end
