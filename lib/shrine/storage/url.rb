@@ -8,7 +8,7 @@ class Shrine
 
       def initialize(downloader: :http, delete: false)
         @downloader = resolve_downloader(downloader)
-        @delete     = false
+        @delete     = delete
       end
 
       def upload(io, id, **)

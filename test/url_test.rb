@@ -102,11 +102,13 @@ describe Shrine::Storage::Url do
       end
 
       it "issues a delete request" do
-        @storage.delete("#{$httpbin}/delete")
+        response = @storage.delete("#{$httpbin}/delete")
+        assert_equal 200, response.status.to_i
       end
 
       it "doesn't care what status is returned" do
-        @storage.delete("#{$httpbin}/status/404")
+        response = @storage.delete("#{$httpbin}/status/404")
+        assert_equal 404, response.status.to_i
       end
     end
   end
