@@ -113,6 +113,6 @@ you'll need to have Docker installed and running.
 [shrine-tus-demo]: https://github.com/shrinerb/shrine-tus-demo
 [shrine-cloudinary]: https://github.com/shrinerb/shrine-cloudinary
 [shrine-uploadcare]: https://github.com/shrinerb/shrine-uploadcare
-[Down]: https://github.com/janko-m/down
+[Down]: https://github.com/janko/down
 [HTTP.rb]: https://github.com/httprb/http
 [kennethreitz/httpbin]: https://github.com/kennethreitz/httpbin
