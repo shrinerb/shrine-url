@@ -36,18 +36,6 @@ describe Shrine::Storage::Url do
     end
   end
 
-  describe "#download" do
-    it "downloads the remote file into a Tempfile" do
-      tempfile = @storage.download("#{$httpbin}/bytes/100")
-      assert_instance_of Tempfile, tempfile
-      assert_equal 100, tempfile.size
-    end
-
-    it "accepts additional down options" do
-      @storage.download("#{$httpbin}/post", method: :post)
-    end
-  end
-
   describe "#open" do
     it "opens the remote file" do
       io = @storage.open("#{$httpbin}/bytes/100")

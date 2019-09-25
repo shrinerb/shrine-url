@@ -15,12 +15,8 @@ class Shrine
         id.replace(io.url)
       end
 
-      def download(id, **options)
-        @downloader.download(id, **options)
-      end
-
       def open(id, **options)
-        @downloader.open(id, **options)
+        downloader.open(id, **options)
       end
 
       def exists?(id)
