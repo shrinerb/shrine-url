@@ -17,6 +17,8 @@ class Shrine
 
       def open(id, **options)
         downloader.open(id, **options)
+      rescue Down::NotFound
+        raise Shrine::FileNotFound, "file #{id.inspect} not found on storage"
       end
 
       def exists?(id)
