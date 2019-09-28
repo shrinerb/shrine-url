@@ -6,7 +6,7 @@ custom URL.
 ## Installation
 
 ```rb
-gem "shrine-url", "~> 2.0"
+gem "shrine-url", "~> 2.4"
 ```
 
 ## Usage
