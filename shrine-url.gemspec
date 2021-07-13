@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "shrine", ">= 3.0.0.rc", "< 4"
   gem.add_dependency "down", "~> 5.0"
-  gem.add_dependency "http", ">= 3.2", "< 5"
+  gem.add_dependency "http", ">= 3.2", "< 6"
 
   gem.add_development_dependency "rake"
   gem.add_development_dependency "minitest"
