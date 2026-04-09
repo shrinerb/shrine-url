@@ -9,48 +9,22 @@ require "minitest/pride"
 require "shrine"
 require "shrine/storage/url"
 
-require "docker-api"
 require "http"
 
-puts "Docker URL: #{Docker.url}"
-
-image = "kennethreitz/httpbin"
-port  = 8080
-
-unless Docker::Image.exist?(image)
-  puts "Pulling #{image}..."
-
-  Docker::Image.create("fromImage" => image)
-end
+$httpbin = "http://localhost"
 
 begin
-  container = Docker::Container.get("httpbin")
-rescue Docker::Error::NotFoundError
-  puts "Creating #{image}..."
+  HTTP.get($httpbin).to_s
+rescue HTTP::ConnectionError
+  warn <<-WARNING
 
-  container = Docker::Container.create(
-    "name" => "httpbin",
-    "Image" => image,
-    "HostConfig" => {
-      "PortBindings" => {
-        "#{port}/tcp" => [{ "HostPort" => port.to_s }]
-      }
-    }
-  )
+The httpbin server is not running on port 80, which is required for tests. Please run:
+
+$ docker pull kennethreitz/httpbin
+$ docker run -p 80:80 kennethreitz/httpbin
+
+WARNING
+  exit 1
 end
-
-puts "Starting #{image}..."
-
-container.start
-
-at_exit do
-  puts "Stopping #{image}..."
-
-  container.kill
-end
-
-$httpbin = "http://localhost:#{port}"
-
-HTTP.get($httpbin).to_s rescue retry # wait until service has started
 
 Minitest.autorun

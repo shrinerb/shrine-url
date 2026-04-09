@@ -23,15 +23,15 @@ describe Shrine::Storage::Url do
       storage = url(downloader: :http)
       assert_equal Down::Http, storage.downloader
 
-      storage = url(downloader: :wget)
-      assert_equal Down::Wget, storage.downloader
+      storage = url(downloader: :httpx)
+      assert_equal Down::Httpx, storage.downloader
     end
   end
 
   describe "#upload" do
     it "replaces the id with an URL" do
       io = OpenStruct.new(url: "http://example.com")
-      @storage.upload(io, id = "foo")
+      @storage.upload(io, id = "foo".dup)
       assert_equal "http://example.com", id
     end
   end

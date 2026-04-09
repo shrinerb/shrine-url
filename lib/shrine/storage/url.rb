@@ -39,7 +39,7 @@ class Shrine
       def request(verb, url, follow: {}, **options)
         options[:follow] = { max_hops: 2 }.merge(follow)
 
-        HTTP.request(verb, url, options)
+        HTTP.request(verb, url, **options)
       end
 
       def resolve_downloader(downloader)

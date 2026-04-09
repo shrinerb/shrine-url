@@ -55,10 +55,10 @@ implemented using [HTTP.rb]. You can change the Down backend via the
 `:downloader` option:
 
 ```rb
-Shrine::Storage::Url.new(downloader: :wget)
+Shrine::Storage::Url.new(downloader: :http)
 # or
-require "down/http"
-Shrine::Storage::Url.new(downloader: Down::Http)
+require "down/httpx"
+Shrine::Storage::Url.new(downloader: Down::Httpx)
 # or
 require "down/net_http"
 Shrine::Storage::Url.new(downloader: Down::NetHttp.new("User-Agent" => "MyApp/1.0.0"))
